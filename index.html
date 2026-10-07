@@ -19,9 +19,7 @@
         <span>JavaScript Test</span>
       </div>
       <div class="header-actions">
-        <button id="btn-open-settings" class="btn-icon" title="Google Sheet Sozlamalari">
-          ⚙️
-        </button>
+        <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 500;">23-27 Mavzular</span>
       </div>
     </div>
   </header>
@@ -176,11 +174,11 @@
           </div>
         </div>
 
-        <!-- Google Sheet Status -->
+        <!-- Natija topshirilish holati -->
         <div class="sheet-sync-alert syncing" id="sheet-sync-box">
           <div class="sync-info">
             <span class="spinner" id="sheet-spinner"></span>
-            <span id="sheet-status-text">Google Sheets jadvaliga natijalar yuborilmoqda...</span>
+            <span id="sheet-status-text">Natijangiz tizimga yuborilmoqda...</span>
           </div>
           <button id="btn-resend-sheet" class="btn btn-outline" style="display: none; padding: 6px 14px; font-size: 0.85rem;">
             Qayta yuborish
@@ -210,54 +208,6 @@
     </section>
 
   </main>
-
-  <!-- Google Sheets Settings Modal -->
-  <div class="modal-overlay" id="settings-modal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3 class="modal-title">⚙️ Google Sheets Integratsiyasi</h3>
-        <button class="modal-close" id="btn-close-settings">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="color: var(--text-muted); font-size: 0.9rem;">
-          Har bir o'quvchi testni tugatganda uning ismi, familiyasi va nechta to'g'ri ishlagani to'g'ridan-to'g'ri Google Sheet jadvalingizga borib tushadi.
-        </p>
-
-        <div class="form-group">
-          <label class="form-label" for="inp-sheet-url">Google Apps Script Web App URL:</label>
-          <input type="url" id="inp-sheet-url" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-          <button id="btn-save-settings" class="btn btn-primary" style="flex: 1;">
-            Saqlash
-          </button>
-          <button id="btn-test-sheet" class="btn btn-outline">
-            Sinab ko'rish 🧪
-          </button>
-        </div>
-
-        <div id="settings-test-msg" style="display:none; padding: 10px; border-radius: 8px; font-size: 0.88rem;"></div>
-
-        <hr style="border: 0; border-top: 1px solid var(--border); margin: 6px 0;">
-
-        <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Google Sheet sozlash tartibi:</div>
-        
-        <div class="guide-step">
-          <div class="step-num">1</div>
-          <div>Google Sheets-da yangi bo'sh jadval oching va yuqori menyudan <strong>Kengaytmalar (Extensions) → Apps Script</strong>-ni bosing.</div>
-        </div>
-        <div class="guide-step">
-          <div class="step-num">2</div>
-          <div>Loyiha papkasidagi <code>google-apps-script.js</code> faylidagi kodni to'liq nusxalab, Apps Script oynasiga qo'ying va saqlang (Ctrl+S).</div>
-        </div>
-        <div class="guide-step">
-          <div class="step-num">3</div>
-          <div><strong>Joylashtirish (Deploy) → Yangi joylashtirish (New deployment)</strong>-ni tanlang. Turini <strong>Veb-ilova (Web app)</strong> qiling, Kirish huquqiga <strong>"Hamma" (Anyone)</strong> ni tanlang va Deploy tugmasini bosing. Chiqqan URL-ni yuqoridagi maydonga joylang!</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <footer class="app-footer">
     <p>JavaScript Dasturlash Kursi • 2026</p>

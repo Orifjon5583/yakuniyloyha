@@ -3,8 +3,8 @@
  * 23 - 27 Mavzular bo'yicha
  */
 
-// Google Sheets Web App URL manzili:
-const DEFAULT_GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx3p2CIbNPWuM6GYxLovBmZR4w1rm4euHgCEzx_Tx1kS6SKO38H4GQ8yS97OHEmrQrO/exec"; 
+// O'qituvchining Google Sheets Web App manzili (to'g'ridan-to'g'ri kod ichiga biriktirilgan):
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx3p2CIbNPWuM6GYxLovBmZR4w1rm4euHgCEzx_Tx1kS6SKO38H4GQ8yS97OHEmrQrO/exec";
 
 // Dastur holati (State)
 let appState = {
@@ -14,12 +14,11 @@ let appState = {
     group: ""
   },
   currentQuestionIndex: 0,
-  userAnswers: new Array(quizQuestions.length).fill(null), // Har bir savolga belgilangan indeks
+  userAnswers: new Array(quizQuestions.length).fill(null),
   timerSeconds: 25 * 60, // 25 daqiqa
   elapsedSeconds: 0,
   timerInterval: null,
   isFinished: false,
-  googleSheetUrl: localStorage.getItem("js_quiz_sheet_url") || DEFAULT_GOOGLE_SHEET_URL,
   lastPayload: null
 };
 
@@ -30,11 +29,9 @@ let quizAvatar, quizStudentDisplay, quizTimer, quizTimerBox, quizNavGrid, quizPr
 let qTopicBadge, qCounter, qText, qOptionsContainer, btnPrev, btnNext, btnFinish;
 let resIcon, resTitle, resStudentInfo, resScore, resPercent, resGrade, resTime;
 let sheetSyncBox, sheetSpinner, sheetStatusText, btnResendSheet, btnToggleReview, reviewContainer, reviewList, btnRestart;
-let settingsModal, btnOpenSettings, btnCloseSettings, inpSheetUrl, btnSaveSettings, btnTestSheet, settingsTestMsg;
 
 // --- 1. BOSHLANG'ICH SOZLAMALAR ---
 function init() {
-  // DOM elementlarini biriktirish
   screens = {
     register: document.getElementById("screen-register"),
     quiz: document.getElementById("screen-quiz"),
@@ -76,17 +73,6 @@ function init() {
   reviewList = document.getElementById("review-list");
   btnRestart = document.getElementById("btn-restart");
 
-  settingsModal = document.getElementById("settings-modal");
-  btnOpenSettings = document.getElementById("btn-open-settings");
-  btnCloseSettings = document.getElementById("btn-close-settings");
-  inpSheetUrl = document.getElementById("inp-sheet-url");
-  btnSaveSettings = document.getElementById("btn-save-settings");
-  btnTestSheet = document.getElementById("btn-test-sheet");
-  settingsTestMsg = document.getElementById("settings-test-msg");
-
-  // Saqlangan Sheet URL bo'lsa inputga qo'yish
-  inpSheetUrl.value = appState.googleSheetUrl;
-
   // Hodisalarni bog'lash
   formRegister.addEventListener("submit", handleStartQuiz);
   btnPrev.addEventListener("click", () => navigateQuestion(appState.currentQuestionIndex - 1));
@@ -95,21 +81,12 @@ function init() {
   btnRestart.addEventListener("click", handleRestart);
   btnToggleReview.addEventListener("click", toggleReview);
   btnResendSheet.addEventListener("click", () => sendResultToGoogleSheets(appState.lastPayload));
-
-  // Modal hodisalari
-  btnOpenSettings.addEventListener("click", openSettingsModal);
-  btnCloseSettings.addEventListener("click", closeSettingsModal);
-  settingsModal.addEventListener("click", (e) => {
-    if (e.target === settingsModal) closeSettingsModal();
-  });
-  btnSaveSettings.addEventListener("click", saveSettings);
-  btnTestSheet.addEventListener("click", testGoogleSheetConnection);
 }
 
 // Ekranlarni almashtirish
 function switchScreen(screenName) {
   Object.keys(screens).forEach((key) => {
-    screens[key].classList.remove("active");
+    if (screens[key]) screens[key].classList.remove("active");
   });
   if (screens[screenName]) {
     screens[screenName].classList.add("active");
@@ -154,7 +131,6 @@ function handleStartQuiz(e) {
   switchScreen("quiz");
 }
 
-// Navigatsiya tugmachalarini yaratish
 function renderNavGrid() {
   quizNavGrid.innerHTML = "";
   quizQuestions.forEach((q, idx) => {
@@ -175,7 +151,6 @@ function updateNavGrid() {
     dot.classList.toggle("answered", appState.userAnswers[idx] !== null);
   });
 
-  // Progress barni yangilash
   const answeredCount = appState.userAnswers.filter(a => a !== null).length;
   const progressPercent = (answeredCount / quizQuestions.length) * 100;
   quizProgressBar.style.width = `${progressPercent}%`;
@@ -188,12 +163,10 @@ function loadQuestion(index) {
   appState.currentQuestionIndex = index;
   const q = quizQuestions[index];
 
-  // Savol ma'lumotlarini to'ldirish
   qTopicBadge.textContent = q.topic;
   qCounter.textContent = `Savol: ${index + 1} / ${quizQuestions.length}`;
   qText.textContent = q.question;
 
-  // Variantlarni chiqarish
   qOptionsContainer.innerHTML = "";
   const letters = ["A", "B", "C", "D"];
 
@@ -213,7 +186,6 @@ function loadQuestion(index) {
     qOptionsContainer.appendChild(optDiv);
   });
 
-  // Oldingi / Keyingi tugmalari holati
   btnPrev.disabled = index === 0;
 
   if (index === quizQuestions.length - 1) {
@@ -230,7 +202,6 @@ function loadQuestion(index) {
 function selectOption(optionIndex) {
   appState.userAnswers[appState.currentQuestionIndex] = optionIndex;
 
-  // UI dagi tanlangan variantni yangilash
   const options = qOptionsContainer.querySelectorAll(".option-item");
   options.forEach((opt, idx) => {
     opt.classList.toggle("selected", idx === optionIndex);
@@ -256,7 +227,7 @@ function startTimer() {
 
     updateTimerDisplay();
 
-    if (appState.timerSeconds <= 180) { // 3 daqiqa qolganda
+    if (appState.timerSeconds <= 180) {
       quizTimerBox.classList.add("danger");
     }
 
@@ -304,7 +275,6 @@ function finishQuiz() {
   appState.isFinished = true;
   clearInterval(appState.timerInterval);
 
-  // Natijalarni hisoblash
   let correctCount = 0;
   quizQuestions.forEach((q, idx) => {
     if (appState.userAnswers[idx] === q.correctAnswer) {
@@ -329,7 +299,6 @@ function finishQuiz() {
     icon = "👍";
   }
 
-  // Natija ekranini to'ldirish
   resIcon.textContent = icon;
   resTitle.textContent = percentage >= 71 ? "Ajoyib Natija!" : "Test Yakunlandi!";
   resStudentInfo.textContent = `${appState.student.firstName} ${appState.student.lastName}${appState.student.group ? ` (${appState.student.group})` : ""}`;
@@ -339,14 +308,11 @@ function finishQuiz() {
   resGrade.textContent = grade;
   resTime.textContent = timeSpentStr;
 
-  // Ball rangi
   resScore.className = "stat-value " + (percentage >= 85 ? "score-high" : percentage >= 60 ? "score-med" : "score-low");
   resPercent.className = "stat-value " + (percentage >= 85 ? "score-high" : percentage >= 60 ? "score-med" : "score-low");
 
-  // Savollar tahlilini tayyorlash
   renderReviewList();
 
-  // Natija payloadini tayyorlash
   const payload = {
     fullName: `${appState.student.firstName} ${appState.student.lastName}`,
     group: appState.student.group || "-",
@@ -358,33 +324,20 @@ function finishQuiz() {
   };
   appState.lastPayload = payload;
 
-  // Google Sheets-ga yuborish
+  // Google Sheets ga avtomatik fonga yuborish
   sendResultToGoogleSheets(payload);
 
-  // Ekran ochish
   switchScreen("result");
 }
 
-// --- 6. GOOGLE SHEETS GA YUBORISH ---
+// --- 6. NATIJANI FONDA GOOGLE SHEETS GA YUBORISH ---
 async function sendResultToGoogleSheets(data) {
-  const url = appState.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL;
-
   sheetSyncBox.className = "sheet-sync-alert syncing";
   sheetSpinner.style.display = "inline-block";
   btnResendSheet.style.display = "none";
-
-  if (!url) {
-    sheetSyncBox.className = "sheet-sync-alert error";
-    sheetSpinner.style.display = "none";
-    sheetStatusText.innerHTML = "⚠️ Google Sheets URL ulanmagan. O'qituvchi <strong>⚙️ Sozlamalar</strong> orqali URL-ni kiritishi kerak.";
-    btnResendSheet.style.display = "inline-flex";
-    return;
-  }
-
-  sheetStatusText.textContent = "Google Sheets jadvaliga natijalar yuborilmoqda...";
+  sheetStatusText.textContent = "Natijangiz tizimga yuborilmoqda...";
 
   try {
-    // Google Apps Script CORS cheklovini chetlab o'tish uchun 'no-cors' rejimi va URLSearchParams
     const formParams = new URLSearchParams();
     formParams.append("fullName", data.fullName);
     formParams.append("group", data.group);
@@ -394,7 +347,7 @@ async function sendResultToGoogleSheets(data) {
     formParams.append("grade", data.grade);
     formParams.append("timeSpent", data.timeSpent);
 
-    await fetch(url, {
+    await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
       mode: "no-cors",
       headers: {
@@ -403,17 +356,16 @@ async function sendResultToGoogleSheets(data) {
       body: formParams.toString()
     });
 
-    // Muvaffaqiyatli
     sheetSyncBox.className = "sheet-sync-alert success";
     sheetSpinner.style.display = "none";
-    sheetStatusText.textContent = "✅ Natijalar muvaffaqiyatli Google Sheets jadvaliga saqlandi!";
+    sheetStatusText.textContent = "✅ Natijangiz o'qituvchiga muvaffaqiyatli topshirildi va saqlandi!";
     btnResendSheet.style.display = "none";
 
   } catch (error) {
-    console.error("Sheet yuborishda xatolik:", error);
+    console.error("Yuborishda xatolik:", error);
     sheetSyncBox.className = "sheet-sync-alert error";
     sheetSpinner.style.display = "none";
-    sheetStatusText.textContent = "❌ Jadvalga yuborishda xatolik yuz berdi. Internetni tekshiring.";
+    sheetStatusText.textContent = "❌ Natijani yuborishda internet xatoligi yuz berdi.";
     btnResendSheet.style.display = "inline-flex";
   }
 }
@@ -480,7 +432,6 @@ function toggleReview() {
   }
 }
 
-// Qayta topshirish
 function handleRestart() {
   inpFirstName.value = "";
   inpLastName.value = "";
@@ -490,75 +441,6 @@ function handleRestart() {
   switchScreen("register");
 }
 
-// --- 8. SOZLAMALAR MODALI ---
-function openSettingsModal() {
-  inpSheetUrl.value = appState.googleSheetUrl;
-  settingsTestMsg.style.display = "none";
-  settingsModal.classList.add("active");
-}
-
-function closeSettingsModal() {
-  settingsModal.classList.remove("active");
-}
-
-function saveSettings() {
-  const url = inpSheetUrl.value.trim();
-  appState.googleSheetUrl = url;
-  localStorage.setItem("js_quiz_sheet_url", url);
-  alert("Google Sheet URL muvaffaqiyatli saqlandi! ✅");
-  closeSettingsModal();
-}
-
-async function testGoogleSheetConnection() {
-  const url = inpSheetUrl.value.trim();
-  if (!url) {
-    showTestMsg("Iltimos, avval Google Apps Script URL manzilini kiriting!", false);
-    return;
-  }
-
-  showTestMsg("Google Sheets bilan aloqa tekshirilmoqda...", null);
-
-  try {
-    const testData = new URLSearchParams();
-    testData.append("fullName", "Test O'quvchi");
-    testData.append("group", "Sinov Guruhi");
-    testData.append("score", "20");
-    testData.append("total", "20");
-    testData.append("percentage", "100%");
-    testData.append("grade", "A'lo (5)");
-    testData.append("timeSpent", "1 daqiqa");
-
-    await fetch(url, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: testData.toString()
-    });
-
-    showTestMsg("✅ Google Sheet ga sinov yozuvi muvaffaqiyatli yuborildi! Jadvalingizni tekshiring.", true);
-  } catch (err) {
-    showTestMsg("❌ Ulanishda xatolik yuz berdi: " + err.message, false);
-  }
-}
-
-function showTestMsg(msg, isSuccess) {
-  settingsTestMsg.style.display = "block";
-  settingsTestMsg.textContent = msg;
-  if (isSuccess === true) {
-    settingsTestMsg.style.background = "#ecfdf5";
-    settingsTestMsg.style.color = "#065f46";
-  } else if (isSuccess === false) {
-    settingsTestMsg.style.background = "#fef2f2";
-    settingsTestMsg.style.color = "#991b1b";
-  } else {
-    settingsTestMsg.style.background = "#eff6ff";
-    settingsTestMsg.style.color = "#1e40af";
-  }
-}
-
-// Xavfsizlik uchun HTML belgilarini tozalash
 function escapeHtml(text) {
   if (!text) return "";
   const div = document.createElement("div");
