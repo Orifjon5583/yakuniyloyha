@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Bilimlarini Sinash Testi (23-27 Mavzular)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="app-header">
+    <div class="nav-container">
+      <div class="logo-badge">
+        <div class="logo-icon">JS</div>
+        <span>JavaScript Test</span>
+      </div>
+      <div class="header-actions">
+        <button id="btn-open-settings" class="btn-icon" title="Google Sheet Sozlamalari">
+          ⚙️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 1. REGISTRATION SCREEN -->
+    <section id="screen-register" class="screen active">
+      <div class="card">
+        <div class="hero-header">
+          <span class="hero-tag">23 - 27 Mavzular Bo'yicha Sinov</span>
+          <h1 class="hero-title">JavaScript Bilim Testi</h1>
+          <p class="hero-subtitle">
+            Dasturlash asoslari bo'yicha bilimlaringizni sinab ko'ring. Barcha natijalar avtomatik tarzda Google Sheets jadvaliga yuboriladi.
+          </p>
+        </div>
+
+        <div class="topics-list">
+          <div class="topics-title">
+            <span>📚 Test mavzulari:</span>
+          </div>
+          <div class="topic-item">
+            <span class="topic-dot"></span>
+            <span><strong>23. JavaScript :</strong> JavaScript nima?: Console, alert bilan muloqot</span>
+          </div>
+          <div class="topic-item">
+            <span class="topic-dot"></span>
+            <span><strong>24. JavaScript :</strong> O'zgaruvchilar: let, const, string, number</span>
+          </div>
+          <div class="topic-item">
+            <span class="topic-dot"></span>
+            <span><strong>25. JavaScript :</strong> Array va Object — ma'lumot turlari</span>
+          </div>
+          <div class="topic-item">
+            <span class="topic-dot"></span>
+            <span><strong>26. JavaScript :</strong> Shartli operatorlar if, else, mantiqiy amallar</span>
+          </div>
+          <div class="topic-item">
+            <span class="topic-dot"></span>
+            <span><strong>27. JavaScript :</strong> Funksiyalar — Kodni qayta ishlatish</span>
+          </div>
+        </div>
+
+        <form id="form-register" class="reg-form">
+          <div class="form-group">
+            <label class="form-label" for="inp-firstname">Ismingiz <span class="req">*</span></label>
+            <input type="text" id="inp-firstname" class="form-input" placeholder="Masalan: Sardor" required autocomplete="given-name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inp-lastname">Familiyangiz <span class="req">*</span></label>
+            <input type="text" id="inp-lastname" class="form-input" placeholder="Masalan: Karimov" required autocomplete="family-name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inp-group">Guruhingiz / Sinifingiz (ixtiyoriy)</label>
+            <input type="text" id="inp-group" class="form-input" placeholder="Masalan: Frontend-102 yoki 10-A sinf">
+          </div>
+
+          <div class="form-info-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Jami <strong>20 ta savol</strong>. Har bir savolga bitta to'g'ri javob mavjud. Savollar orasida bemalol oldinga va orqaga harakatlanishingiz mumkin.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 6px;">
+            Testni Boshlash 🚀
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. QUIZ SCREEN -->
+    <section id="screen-quiz" class="screen">
+      <!-- Quiz Top Info Bar -->
+      <div class="quiz-topbar">
+        <div class="student-tag">
+          <div class="student-avatar" id="quiz-avatar">S</div>
+          <span id="quiz-student-display">O'quvchi: Sardor Karimov</span>
+        </div>
+        <div class="timer-box" id="quiz-timer-box">
+          <span>⏱️</span>
+          <span id="quiz-timer">25:00</span>
+        </div>
+      </div>
+
+      <!-- Question Navigation Grid (1 to 20 dots) -->
+      <div class="question-nav" id="quiz-nav-grid">
+        <!-- Generated dynamically in JS -->
+      </div>
+
+      <!-- Progress Line -->
+      <div class="progress-container">
+        <div class="progress-fill" id="quiz-progress-bar"></div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="question-card">
+        <div class="question-header">
+          <span class="topic-badge" id="q-topic-badge">23. JavaScript nima?</span>
+          <span class="question-number" id="q-counter">Savol: 1 / 20</span>
+        </div>
+
+        <h2 class="question-text" id="q-text">Savol yuklanmoqda...</h2>
+
+        <div class="options-list" id="q-options-container">
+          <!-- Options rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="quiz-actions">
+        <button id="btn-prev" class="btn btn-outline" disabled>
+          ← Oldingi
+        </button>
+        <button id="btn-next" class="btn btn-primary">
+          Keyingi →
+        </button>
+        <button id="btn-finish" class="btn btn-success" style="display: none;">
+          Testni Yakunlash ✓
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. RESULT SCREEN -->
+    <section id="screen-result" class="screen">
+      <div class="result-card">
+        <div class="result-icon-wrapper" id="res-icon">🏆</div>
+        <h1 class="result-title" id="res-title">Test Yakunlandi!</h1>
+        <p class="result-student-name" id="res-student-info">Sardor Karimov (Frontend-102)</p>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value" id="res-score">18 / 20</div>
+            <div class="stat-label">To'g'ri javoblar</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="res-percent">90%</div>
+            <div class="stat-label">Natija</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="res-grade">A'lo (5)</div>
+            <div class="stat-label">Baho</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="res-time">12:45</div>
+            <div class="stat-label">Sarflangan vaqt</div>
+          </div>
+        </div>
+
+        <!-- Google Sheet Status -->
+        <div class="sheet-sync-alert syncing" id="sheet-sync-box">
+          <div class="sync-info">
+            <span class="spinner" id="sheet-spinner"></span>
+            <span id="sheet-status-text">Google Sheets jadvaliga natijalar yuborilmoqda...</span>
+          </div>
+          <button id="btn-resend-sheet" class="btn btn-outline" style="display: none; padding: 6px 14px; font-size: 0.85rem;">
+            Qayta yuborish
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button id="btn-toggle-review" class="btn btn-outline">
+            📋 Xatolar va Tahlilni ko'rish
+          </button>
+          <button id="btn-restart" class="btn btn-primary">
+            🔄 Yangi O'quvchi / Qayta Topshirish
+          </button>
+        </div>
+      </div>
+
+      <!-- Question Review / Analysis Section -->
+      <div class="review-section" id="review-container" style="display: none;">
+        <div class="review-header">
+          <h2 class="review-title">Savollar Tahlili va To'g'ri Javoblar</h2>
+          <span style="font-size: 0.9rem; color: var(--text-muted);" id="review-summary">20 ta savoldan tahlil</span>
+        </div>
+        <div class="review-list" id="review-list">
+          <!-- Filled dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Google Sheets Settings Modal -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Google Sheets Integratsiyasi</h3>
+        <button class="modal-close" id="btn-close-settings">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Har bir o'quvchi testni tugatganda uning ismi, familiyasi va nechta to'g'ri ishlagani to'g'ridan-to'g'ri Google Sheet jadvalingizga borib tushadi.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="inp-sheet-url">Google Apps Script Web App URL:</label>
+          <input type="url" id="inp-sheet-url" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="btn-save-settings" class="btn btn-primary" style="flex: 1;">
+            Saqlash
+          </button>
+          <button id="btn-test-sheet" class="btn btn-outline">
+            Sinab ko'rish 🧪
+          </button>
+        </div>
+
+        <div id="settings-test-msg" style="display:none; padding: 10px; border-radius: 8px; font-size: 0.88rem;"></div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 6px 0;">
+
+        <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Google Sheet sozlash tartibi:</div>
+        
+        <div class="guide-step">
+          <div class="step-num">1</div>
+          <div>Google Sheets-da yangi bo'sh jadval oching va yuqori menyudan <strong>Kengaytmalar (Extensions) → Apps Script</strong>-ni bosing.</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">2</div>
+          <div>Loyiha papkasidagi <code>google-apps-script.js</code> faylidagi kodni to'liq nusxalab, Apps Script oynasiga qo'ying va saqlang (Ctrl+S).</div>
+        </div>
+        <div class="guide-step">
+          <div class="step-num">3</div>
+          <div><strong>Joylashtirish (Deploy) → Yangi joylashtirish (New deployment)</strong>-ni tanlang. Turini <strong>Veb-ilova (Web app)</strong> qiling, Kirish huquqiga <strong>"Hamma" (Anyone)</strong> ni tanlang va Deploy tugmasini bosing. Chiqqan URL-ni yuqoridagi maydonga joylang!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>JavaScript Dasturlash Kursi • 2026</p>
+  </footer>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
