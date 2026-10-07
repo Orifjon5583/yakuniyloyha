@@ -3,9 +3,8 @@
  * 23 - 27 Mavzular bo'yicha
  */
 
-// Agar o'qituvchi Google Sheets Web App URL-ni to'g'ridan-to'g'ri kodga yozmoqchi bo'lsa,
-// quyidagi bo'sh satrga o'z URL-ini qo'yishi mumkin:
-const DEFAULT_GOOGLE_SHEET_URL = ""; 
+// Google Sheets Web App URL manzili:
+const DEFAULT_GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx3p2CIbNPWuM6GYxLovBmZR4w1rm4euHgCEzx_Tx1kS6SKO38H4GQ8yS97OHEmrQrO/exec"; 
 
 // Dastur holati (State)
 let appState = {
